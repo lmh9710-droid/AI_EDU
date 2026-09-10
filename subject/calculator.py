@@ -5,25 +5,24 @@ arg2 = int(input("더할 숫자 입력"))
 num = input("사칙 연산자 입력")
 
 def plus(a, b):
-    return a+b
+    print(f"{arg1}+{arg2}={arg1+arg2}")
 
 def minus(a, b):
-    return a-b
+    print(f"{arg1}-{arg2}={arg1-arg2}")
 
 def multiple(a, b):
-    return a*b
+   print(f"{arg1}*{arg2}={arg1*arg2}")
 
 def divide(a, b):
-    return a/b
-
+   print(f"{arg1}/{arg2}={arg1/arg2}")
 match num:
     case '+':
-      print(plus(arg1, arg2))
+        plus(arg1, arg2)
     case '-':
-      print(minus(arg1, arg2))
+        minus(arg1, arg2)
     case '*':
-      print(multiple(arg1, arg2))
+        multiple(arg1, arg2)
     case '/':
-      print(divide(arg1, arg2))
+        divide(arg1, arg2)
         
 
