@@ -1,9 +1,7 @@
 # 프로젝트명: 추석 KTX 티켓 발행관리 시스템
 
 ## 1. 프로젝트 개요 
-  1) 
-  2) 임베디드 하드웨어에서 발생하는 센서 값을 UART 통신으로 PC환경에서 Read하여 DataBase(SQLite)에 저장하는 미들웨어 프로그램 작성
-  3) DataBase(SQLite)에 저장된 센서값을 웹 Dash Board(streamlit)에 모니터링
+  - 추석 KTX 열차 티켓 발행 관리하는 시스템 개발 프로젝트 
 ---
 ## 2. 개발환경
 ### 1)운영체제: Window 
@@ -23,10 +21,18 @@
   
 ### 3)프로그램 로직 구현
 - Class 로직 구현
-- 
+- main 실행 로직 구현
   
 ---
-## 5. 데이터 수집기 Class Diagram
+## 4. Class Diagram
+<img width="512" height="237" alt="image" src="https://github.com/user-attachments/assets/bd5fa99b-d0c3-48f4-994a-7cfc36e06e5e" />
+
+## 5. Flow Chart 
+
+## 6. DataBase Modeling
+
+## 7. Streamlit 실행 사진 
+
 https://docs.google.com/presentation/d/19TlTS1X52byoVI1oZFvAYV2KIdgTy1IpOjajBqzsJ_c/edit?slide=id.g3faa0a7f120_0_92#slide=id.g3faa0a7f120_0_92
 
 <img width="1915" height="1004" alt="image" src="https://github.com/user-attachments/assets/e32a03f0-812c-4f18-b28c-6cf447c5ba2b" />
