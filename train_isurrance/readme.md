@@ -33,7 +33,7 @@
 ## 6. DataBase Modeling
 <img width="1048" height="579" alt="image" src="https://github.com/user-attachments/assets/1728d083-3631-40e1-b513-a556c5223ea1" />
 
-## 7. Streamlit 실행 사진 
+## 7. Streamlit 실행 화면 
 
 ### 1)DashBoard
 <img width="1915" height="1004" alt="image" src="https://github.com/user-attachments/assets/e32a03f0-812c-4f18-b28c-6cf447c5ba2b" />
