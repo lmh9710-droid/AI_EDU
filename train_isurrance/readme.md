@@ -41,7 +41,7 @@
 
 ### 3.2. Flow Chart
 <p align="center">
-  <img width="80%" alt="Flow Chart" src="https://github.com/user-attachments/assets/3a0d40cc-ad7f-4b06-bd06-83a1eb33d256" />
+  <img width="650" height="866" alt="image" src="https://github.com/user-attachments/assets/e0e0be1f-e15c-40b9-aafc-5ef9c11931ef" />
 </p>
 
 ### 3.3. DataBase Modeling
