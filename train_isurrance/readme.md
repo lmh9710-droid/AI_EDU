@@ -34,13 +34,17 @@
 <img width="1048" height="579" alt="image" src="https://github.com/user-attachments/assets/1728d083-3631-40e1-b513-a556c5223ea1" />
 
 ## 7. Streamlit 실행 사진 
+
 ### 1)DashBoard
 <img width="1915" height="1004" alt="image" src="https://github.com/user-attachments/assets/e32a03f0-812c-4f18-b28c-6cf447c5ba2b" />
+
 ### 2)열차권 발행탭
 <img width="1906" height="1009" alt="image" src="https://github.com/user-attachments/assets/ee5c3a1c-6428-405d-91e0-80daacc5ba43" />
+
 ### 3)운행노선 추가탭 
 <img width="1913" height="1006" alt="image" src="https://github.com/user-attachments/assets/4e4a4611-ce30-42c5-a53e-a835368ebb17" />
-### 4)운행노선 조회탭
+
+### 4)운행노선 조회/삭제/수정 탭
 <img width="1908" height="977" alt="image" src="https://github.com/user-attachments/assets/76842b81-fb22-4e35-8132-d38c17faa3b6" />
 
 발표자료: https://docs.google.com/presentation/d/19TlTS1X52byoVI1oZFvAYV2KIdgTy1IpOjajBqzsJ_c/edit?slide=id.g3faa0a7f120_0_92#slide=id.g3faa0a7f120_0_92
