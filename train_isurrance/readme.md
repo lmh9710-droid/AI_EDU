@@ -25,15 +25,15 @@
   
 ---
 ## 4. Class Diagram
-<img width="512" height="237" alt="image" src="https://github.com/user-attachments/assets/bd5fa99b-d0c3-48f4-994a-7cfc36e06e5e" />
+<img width="1276" height="579" alt="image" src="https://github.com/user-attachments/assets/d93896c8-3d68-4272-8b94-70649018ac17" />
 
 ## 5. Flow Chart 
+<img width="633" height="770" alt="image" src="https://github.com/user-attachments/assets/3a0d40cc-ad7f-4b06-bd06-83a1eb33d256" />
 
 ## 6. DataBase Modeling
+<img width="1048" height="579" alt="image" src="https://github.com/user-attachments/assets/1728d083-3631-40e1-b513-a556c5223ea1" />
 
 ## 7. Streamlit 실행 사진 
-
-https://docs.google.com/presentation/d/19TlTS1X52byoVI1oZFvAYV2KIdgTy1IpOjajBqzsJ_c/edit?slide=id.g3faa0a7f120_0_92#slide=id.g3faa0a7f120_0_92
 
 <img width="1915" height="1004" alt="image" src="https://github.com/user-attachments/assets/e32a03f0-812c-4f18-b28c-6cf447c5ba2b" />
 
@@ -43,3 +43,4 @@ https://docs.google.com/presentation/d/19TlTS1X52byoVI1oZFvAYV2KIdgTy1IpOjajBqzs
 
 <img width="1908" height="977" alt="image" src="https://github.com/user-attachments/assets/76842b81-fb22-4e35-8132-d38c17faa3b6" />
 
+발표자료: https://docs.google.com/presentation/d/19TlTS1X52byoVI1oZFvAYV2KIdgTy1IpOjajBqzsJ_c/edit?slide=id.g3faa0a7f120_0_92#slide=id.g3faa0a7f120_0_92
