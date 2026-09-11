@@ -29,37 +29,43 @@
 ### 💻 2.3. 로직 구현
 - **클래스 구현**: 비즈니스 로직 Class 모듈화
 - **메인 로직**: Main 실행 구문 및 통합 프로세스 구축
-  
----
-## 4. Class Diagram
-<img width="1276" height="579" alt="image" src="https://github.com/user-attachments/assets/d93896c8-3d68-4272-8b94-70649018ac17" />
 
 ---
 
-## 5. Flow Chart 
-<img width="633" height="770" alt="image" src="https://github.com/user-attachments/assets/3a0d40cc-ad7f-4b06-bd06-83a1eb33d256" />
+## 📊 3. 시스템 설계 (Diagrams)
 
----
+### 3.1. Class Diagram
+<p align="center">
+  <img width="100%" alt="Class Diagram" src="https://github.com/user-attachments/assets/d93896c8-3d68-4272-8b94-70649018ac17" />
+</p>
 
-## 6. DataBase Modeling
+### 3.2. Flow Chart
+<p align="center">
+  <img width="80%" alt="Flow Chart" src="https://github.com/user-attachments/assets/3a0d40cc-ad7f-4b06-bd06-83a1eb33d256" />
+</p>
+
+### 3.3. DataBase Modeling
+<p align="center">
 <img width="1048" height="579" alt="image" src="https://github.com/user-attachments/assets/1728d083-3631-40e1-b513-a556c5223ea1" />
+</p>
 
 ---
 
-## 7. Streamlit 실행 화면 
+## 🖥️ 4. Streamlit 실행 화면
 
-### 1)DashBoard
-<img width="1915" height="1004" alt="image" src="https://github.com/user-attachments/assets/e32a03f0-812c-4f18-b28c-6cf447c5ba2b" />
+### 4.1. Dashboard
+<img width="100%" alt="Dashboard" src="https://github.com/user-attachments/assets/e32a03f0-812c-4f18-b28c-6cf447c5ba2b" />
 
-### 2)열차권 발행탭
-<img width="1906" height="1009" alt="image" src="https://github.com/user-attachments/assets/ee5c3a1c-6428-405d-91e0-80daacc5ba43" />
+### 4.2. 열차권 발행 탭
+<img width="100%" alt="열차권 발행 탭" src="https://github.com/user-attachments/assets/ee5c3a1c-6428-405d-91e0-80daacc5ba43" />
 
-### 3)운행노선 추가탭 
-<img width="1913" height="1006" alt="image" src="https://github.com/user-attachments/assets/4e4a4611-ce30-42c5-a53e-a835368ebb17" />
+### 4.3. 운행노선 추가 탭
+<img width="100%" alt="운행노선 추가 탭" src="https://github.com/user-attachments/assets/4e4a4611-ce30-42c5-a53e-a835368ebb17" />
 
-### 4)운행노선 조회/삭제/수정 탭
-<img width="1908" height="977" alt="image" src="https://github.com/user-attachments/assets/76842b81-fb22-4e35-8132-d38c17faa3b6" />
+### 4.4. 운행노선 조회/삭제/수정 탭
+<img width="100%" alt="운행노선 조회/삭제/수정 탭" src="https://github.com/user-attachments/assets/76842b81-fb22-4e35-8132-d38c17faa3b6" />
 
 ---
 
-## 발표자료: https://docs.google.com/presentation/d/19TlTS1X52byoVI1oZFvAYV2KIdgTy1IpOjajBqzsJ_c/edit?slide=id.g3faa0a7f120_0_92#slide=id.g3faa0a7f120_0_92
+## 📢 5. 발표 자료
+- 🔗 [Google Slides 발표 자료 바로가기](https://docs.google.com/presentation/d/19TlTS1X52byoVI1oZFvAYV2KIdgTy1IpOjajBqzsJ_c/edit?slide=id.g3faa0a7f120_0_92#slide=id.g3faa0a7f120_0_92)
