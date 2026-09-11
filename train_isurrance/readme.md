@@ -47,4 +47,4 @@
 ### 4)운행노선 조회/삭제/수정 탭
 <img width="1908" height="977" alt="image" src="https://github.com/user-attachments/assets/76842b81-fb22-4e35-8132-d38c17faa3b6" />
 
-발표자료: https://docs.google.com/presentation/d/19TlTS1X52byoVI1oZFvAYV2KIdgTy1IpOjajBqzsJ_c/edit?slide=id.g3faa0a7f120_0_92#slide=id.g3faa0a7f120_0_92
+## 발표자료: https://docs.google.com/presentation/d/19TlTS1X52byoVI1oZFvAYV2KIdgTy1IpOjajBqzsJ_c/edit?slide=id.g3faa0a7f120_0_92#slide=id.g3faa0a7f120_0_92
