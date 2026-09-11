@@ -45,7 +45,10 @@
 </p>
 
 ### 3.3. DataBase Modeling
+<p align="center">
 <img width="1048" height="579" alt="image" src="https://github.com/user-attachments/assets/1728d083-3631-40e1-b513-a556c5223ea1" />
+</p>
+
 ---
 
 ## 🖥️ 4. Streamlit 실행 화면
