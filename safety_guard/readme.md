@@ -48,7 +48,7 @@
 
 ---
 
-## 4. 실습 
+## 🖥️ 4. 실습 
 
 <img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/e39665fd-9245-437c-91de-41d5185094b7" />
 
