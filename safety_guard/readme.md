@@ -44,7 +44,8 @@
 <img width="1858" height="305" alt="image" src="https://github.com/user-attachments/assets/a2149c1e-1edf-4105-a2c3-09fe542bee7e" />
 
 ### 3.3 DataBase Modeling
-<img width="387" height="659" alt="image" src="https://github.com/user-attachments/assets/b4b54f9a-0d43-4bbc-99ce-8219ce7af8b8" />
+<img width="674" height="539" alt="image" src="https://github.com/user-attachments/assets/18a6c34c-73fc-4a31-a958-91e529edd83d" />
+
 
 ---
 
