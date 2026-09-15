@@ -37,61 +37,6 @@
 
 ### 3.1. Class Diagram
 
-```mermaid
-classDiagram
-    class Config {
-        +float MM_PER_PIXEL
-        +int TOTAL_W, TOTAL_H
-        +int LIVE_W, GALLERY_W
-        +int DEFAULT_ROI_MARGIN
-        +float COOLDOWN_SEC
-        +str DB_FILE
-        +dict RISK_MAP
-    }
-
-    class DatabaseManager {
-        -str db_path
-        -init_db()
-        +log_event(...)
-    }
-
-    class TextRenderer {
-        +put_korean_text()$+apply_high_readability_banner()$
-    }
-
-    class ZoomAndROIManager {
-        +calculate_roi_box()
-        +process_zoom()
-    }
-
-    class MotionAnalyzer {
-        +float mm_per_px
-        +analyze()
-    }
-
-    class GalleryManager {
-        +list captured_images
-        +handle_mouse()
-        +add_image()
-        +render_panel()
-    }
-
-    class SafetyGuardApp {
-        -ZoomAndROIManager zoom_roi_mgr
-        -MotionAnalyzer analyzer
-        -GalleryManager gallery_mgr
-        -DatabaseManager db_mgr
-        +run()
-    }
-
-    SafetyGuardApp *-- ZoomAndROIManager
-    SafetyGuardApp *-- MotionAnalyzer
-    SafetyGuardApp *-- GalleryManager
-    SafetyGuardApp *-- DatabaseManager
-    SafetyGuardApp ..> Config
-    GalleryManager ..> TextRenderer
-    SafetyGuardApp ..> TextRenderer
-
 
 <img width="1771" height="863" alt="image" src="https://github.com/user-attachments/assets/fb28594f-11e8-4c46-a8bf-27c8055d7217" />
 <img width="1858" height="305" alt="image" src="https://github.com/user-attachments/assets/a2149c1e-1edf-4105-a2c3-09fe542bee7e" />
