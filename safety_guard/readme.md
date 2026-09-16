@@ -36,7 +36,40 @@
 ## 📊 3. 시스템 설계 (Diagrams)
 
 ### 3.1. Class Diagram
-<img width="1438" height="866" alt="image" src="https://github.com/user-attachments/assets/d9a79393-265f-426c-bf78-2dd7f0478777" />
+```mermaid
+classDiagram
+    direction TB
+
+    class Config {
+        <<struct>>
+        +double PIXEL_TO_MM
+        +int ALERT_LEVELS
+        +int COOLDOWN_SEC
+    }
+
+    class DatabaseManager {
+        -sqlite3* db
+        +initDatabase() bool
+        +insertLog(log) bool
+    }
+
+    class MotionAnalyzer {
+        -Mat framePrev1, framePrev2
+        -Rect roiArea
+        +processFrame(frame) Mat
+        -calcFrameDiff() Mat
+        -convertPixelsToMm() double
+    }
+
+    class MainApp {
+        +main() int
+    }
+
+    MotionAnalyzer ..> Config : 참조
+    DatabaseManager ..> Config : 참조
+    MainApp --> MotionAnalyzer : 제어
+    MainApp --> DatabaseManager : 기록
+```
 
 
 ### 3.2. Flow Chart
