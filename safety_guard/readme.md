@@ -96,26 +96,14 @@ flowchart TD
 ```
 
 ### 3.3 DataBase Modeling
-
-### 📌 테이블명: `intrusion_logs` (침투 이력 로그)
-
-| 컬럼명 | 타입 | 제약 조건 | 설명 |
-| :--- | :--- | :--- | :--- |
-| **log_id** | INTEGER | PRIMARY KEY AUTOINCREMENT | 로그 고유 번호 |
-| **timestamp** | TEXT | NOT NULL DEFAULT (datetime) | 감지 일시 |
-| **distance_mm** | REAL | NOT NULL | 침투 거리 (mm 환산) |
-| **alert_level** | INTEGER | NOT NULL | 위험 단계 (1~3단계) |
-| **img_path** | TEXT | | 캡처 이미지 경로 |
-
-### 💻 DDL (테이블 생성 SQL)
-```sql
-CREATE TABLE IF NOT EXISTS intrusion_logs (
-    log_id INTEGER PRIMARY KEY AUTOINCREMENT,
-    timestamp TEXT NOT NULL DEFAULT (datetime('now', 'localtime')),
-    distance_mm REAL NOT NULL,
-    alert_level INTEGER NOT NULL,
-    img_path TEXT
-);
+erDiagram
+    intrusion_logs {
+        INTEGER log_id PK "AUTOINCREMENT"
+        TEXT timestamp "NOT NULL (DEFAULT: local_time)"
+        REAL distance_mm "NOT NULL"
+        INTEGER alert_level "NOT NULL"
+        TEXT img_path
+    }
 ```
 ---
 
