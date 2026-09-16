@@ -40,7 +40,7 @@
 
 
 ### 3.2. Flow Chart
-
+```mermaid
 flowchart TD
     Start([시작]) --> Init[1. 시스템 및 DB 초기화]
     Init --> Capture[2. 실시간 프레임 캡처]
@@ -60,7 +60,7 @@ flowchart TD
     Update --> Loop{9. 종료 키 요청?}
     Loop -- No --> Capture
     Loop -- Yes --> End([종료])
-
+```
 
 ### 3.3 DataBase Modeling
 
