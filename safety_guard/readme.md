@@ -36,9 +36,31 @@
 ## 📊 3. 시스템 설계 (Diagrams)
 
 ### 3.1. Class Diagram
+<img width="1438" height="866" alt="image" src="https://github.com/user-attachments/assets/d9a79393-265f-426c-bf78-2dd7f0478777" />
 
 
 ### 3.2. Flow Chart
+
+flowchart TD
+    Start([시작]) --> Init[1. 시스템 및 DB 초기화]
+    Init --> Capture[2. 실시간 프레임 캡처]
+    
+    Capture --> Diff[3. 3-Frame 차분 및 ROI 검출]
+    Diff --> Calc[4. 픽셀-mm 환산 연산 *0.264mm/px*]
+    
+    Calc --> Cond1{5. 침투 감지?}
+    Cond1 -- No --> Update[7. 프레임 버퍼 업데이트]
+    
+    Cond1 -- Yes --> Cond2{6. 2초 쿨다운 해제?}
+    Cond2 -- No --> Update
+    
+    Cond2 -- Yes --> Action[8. 위험 단계별 시각화 & DB 저장]
+    Action --> Update
+    
+    Update --> Loop{9. 종료 키 요청?}
+    Loop -- No --> Capture
+    Loop -- Yes --> End([종료])
+
 
 ### 3.3 DataBase Modeling
 
