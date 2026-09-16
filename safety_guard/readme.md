@@ -98,6 +98,7 @@ flowchart TD
 ### 3.3 DataBase Modeling
 
 * **테이블명:** `intrusion_logs` (로그 고유 번호, 감지 일시, 침투 거리, 위험 단계, 이미지 경로 저장)
+
 ```sql
 CREATE TABLE IF NOT EXISTS intrusion_logs (
     log_id INTEGER PRIMARY KEY AUTOINCREMENT,
