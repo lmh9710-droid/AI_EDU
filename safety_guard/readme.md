@@ -96,6 +96,7 @@ flowchart TD
 ```
 
 ### 3.3 DataBase Modeling
+```mermaid
 erDiagram
     intrusion_logs {
         INTEGER log_id PK "AUTOINCREMENT"
