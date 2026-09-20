@@ -38,7 +38,7 @@ class DatabaseManager {
         const char* sql = "INSERT INTO intrusion_logs ("
                           "timestamp, max_penetration_mm," 
                           "danger_level, image_path)"
-                          "ALUES (?, ?, ?, ?);";
+                          "VALUES (?, ?, ?, ?);";
         
         sqlite3_stmt* stmt;
         
