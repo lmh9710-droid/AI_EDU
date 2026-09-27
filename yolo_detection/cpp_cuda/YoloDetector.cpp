@@ -13,7 +13,7 @@ YoloDetector::YoloDetector(const std::string& modelPath, const std::vector<std::
     session_options.SetIntraOpNumThreads(1);
     session_options.SetGraphOptimizationLevel(GraphOptimizationLevel::ORT_ENABLE_ALL);
 
-    // 🛠️ 경고 제거 및 0번 GPU(RTX 4070) CUDA 가속 엔진 바인딩
+    //  경고 제거 및 0번 GPU(RTX 4070) CUDA 가속 엔진 바인딩
     OrtStatus* cuda_status = OrtSessionOptionsAppendExecutionProvider_CUDA(session_options, 0); 
 
     std::cout << "🚀 [PRO MODE] ONNX Runtime CUDA 가속 세션 생성 중: " << modelPath << std::endl;
@@ -54,7 +54,7 @@ void YoloDetector::detect(cv::Mat& frame) {
         memory_info, input_tensor_values.data(), input_tensor_values.size(), input_node_dims.data(), input_node_dims.size()
     );
 
-    // 🔥 [RTX 4070 초고속 추론]
+    // [Nvidia GPU 초고속 추론]
     auto output_tensors = session.Run(
         Ort::RunOptions{nullptr}, input_node_names.data(), &input_tensor, 1, output_node_names.data(), 1
     );
