@@ -1,0 +1,43 @@
+{
+  "version": 6,
+  "cmakeMinimumRequired": { "major": 3, "minor": 25, "patch": 0 },
+  "configurePresets": [
+    {
+      "name": "wsl-base",
+      "hidden": true,
+      "generator": "Ninja",
+      "cacheVariables": {
+        "CMAKE_PREFIX_PATH": "$env{HOME}/yolo_libs/opencv5",
+        "OpenVINO_DIR": "$env{HOME}/yolo_libs/openvino/cmake",
+        "ONNXRUNTIME_DIR": "$env{HOME}/yolo_libs/onnxruntime",
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+      }
+    },
+    {
+      "name": "release",
+      "displayName": "Release (빠른 실행용)",
+      "inherits": "wsl-base",
+      "binaryDir": "${sourceDir}/build/release",
+      "cacheVariables": { "CMAKE_BUILD_TYPE": "Release" }
+    },
+    {
+      "name": "debug",
+      "displayName": "Debug (중단점 디버깅용)",
+      "inherits": "wsl-base",
+      "binaryDir": "${sourceDir}/build/debug",
+      "cacheVariables": { "CMAKE_BUILD_TYPE": "Debug" }
+    },
+    {
+      "name": "release-openvino-only",
+      "displayName": "Release - OpenVINO 만 (ORT 제외)",
+      "inherits": "release",
+      "binaryDir": "${sourceDir}/build/release-ov",
+      "cacheVariables": { "ENABLE_ONNXRUNTIME": "OFF" }
+    }
+  ],
+  "buildPresets": [
+    { "name": "release", "displayName": "Release 빌드", "configurePreset": "release" },
+    { "name": "debug", "displayName": "Debug 빌드", "configurePreset": "debug" },
+    { "name": "release-openvino-only", "displayName": "Release 빌드 (OpenVINO 만)", "configurePreset": "release-openvino-only" }
+  ]
+}

@@ -1,0 +1,392 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>예측 vs 실측 — 스마트팩토리 PdM</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
+<style>
+  /* ISA-101 고성능 HMI 관례: 정상은 무채색, 색은 이상 상태에만 */
+  :root {
+    --bg: #D5D8DC; --panel: #EBEDEF; --ink: #1E2730; --muted: #5E6B78; --rule: #B9BFC6;
+    --pred: #2E64A6; --band: rgba(46,100,166,.16); --future: rgba(46,100,166,.06);
+    --alarm: #C0182B; --warn: #D9921A; --ok-ink: #1E2730;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--bg); color: var(--ink); }
+  body { font-family: "IBM Plex Sans KR", "Malgun Gothic", "Apple SD Gothic Neo", sans-serif;
+         font-size: 15px; line-height: 1.5; font-variant-numeric: tabular-nums; }
+  button { font: inherit; }
+  :focus-visible { outline: 3px solid var(--pred); outline-offset: 2px; }
+
+  /* 라인 상태 띠: 가동 중엔 조용하게, 정지/경고 시 화면 전체 폭으로 강조 */
+  #line { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 28px; padding: 14px 24px;
+          background: var(--panel); border-bottom: 1px solid var(--rule); }
+  #line .state { font-size: 28px; font-weight: 700; letter-spacing: -.01em; }
+  #line .facts { display: flex; flex-wrap: wrap; gap: 4px 22px; color: var(--muted); }
+  #line .facts b { color: inherit; font-weight: 600; }
+  #line.stopped { background: var(--alarm); color: #fff; border-color: var(--alarm); }
+  #line.stopped .facts { color: #fde8ea; }
+  #line.warn { background: #F6E3BF; border-color: var(--warn); }
+  #line .spacer { flex: 1; }
+  .window { display: flex; gap: 4px; }
+  .window button { border: 1px solid var(--rule); background: #fff; color: var(--ink); padding: 4px 12px; border-radius: 3px; cursor: pointer; }
+  .window button[aria-pressed="true"] { background: var(--ink); color: #fff; border-color: var(--ink); }
+  #line.stopped .window button { border-color: #fff; }
+
+  main { padding: 18px 24px 40px; max-width: 1680px; margin: 0 auto; }
+  #msg { display: none; padding: 12px 16px; margin-bottom: 16px; background: #fff; border-left: 4px solid var(--warn); }
+  .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+  .grid.small { margin-top: 16px; }
+  @media (max-width: 1100px) { .grid { grid-template-columns: 1fr; } }
+
+  .chart-panel { background: var(--panel); border: 1px solid var(--rule); border-radius: 4px; padding: 14px 16px 10px; }
+  .chart-panel.alarm { border: 2px solid var(--alarm); padding: 13px 15px 9px; }
+  .chart-panel h2 { margin: 0; font-size: 17px; font-weight: 600; }
+  .chart-panel h2 small { font-size: 14px; font-weight: 400; color: var(--muted); margin-left: 6px; }
+  .readout { display: flex; flex-wrap: wrap; gap: 6px 28px; margin: 8px 0 6px; align-items: baseline; }
+  .readout .v { font-size: 24px; font-weight: 600; }
+  .readout .k { color: var(--muted); font-size: 13px; display: block; }
+  .readout .pred .v { color: var(--pred); }
+  .readout .alarm .v { color: var(--alarm); }
+  .status { font-size: 13px; padding: 1px 8px; border-radius: 3px; background: #fff; border: 1px solid var(--rule); }
+  .status.bad { border-color: var(--warn); color: #7a4d00; background: #FBF0DA; }
+  .canvas-box { position: relative; height: 260px; }
+  .small .canvas-box { height: 170px; }
+  .foot { display: flex; flex-wrap: wrap; gap: 4px 20px; color: var(--muted); font-size: 13px; margin-top: 6px; }
+  .foot b { color: var(--ink); font-weight: 600; }
+
+  .tables { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; margin-top: 16px; }
+  #visionSec { grid-column: 1 / -1; }
+  @media (max-width: 1100px) { .tables { grid-template-columns: 1fr; } }
+  .tables section { background: var(--panel); border: 1px solid var(--rule); border-radius: 4px; padding: 14px 16px; overflow-x: auto; }
+  .tables h2 { margin: 0 0 8px; font-size: 17px; font-weight: 600; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th { text-align: left; color: var(--muted); font-weight: 500; padding: 4px 8px; border-bottom: 1px solid var(--rule); white-space: nowrap; }
+  td { padding: 5px 8px; border-bottom: 1px solid #DADDE1; white-space: nowrap; }
+  td.num { text-align: right; }
+  tr.act td { color: var(--alarm); font-weight: 600; }
+  .empty { color: var(--muted); }
+  .legend { color: var(--muted); font-size: 13px; margin: 0 0 12px; }
+  .legend i { display: inline-block; width: 22px; height: 0; vertical-align: middle; margin: 0 6px 0 14px; border-top: 2px solid var(--ink); }
+  .legend i.raw { border-top: 1px solid rgba(30,39,48,.35); }
+  .legend i.p50 { border-top: 2px dashed var(--pred); }
+  .legend i.band { height: 10px; border: 0; background: var(--band); }
+  .legend i.lim { border-top: 2px solid var(--alarm); }
+  .legend i:first-child { margin-left: 0; }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+<header id="line" aria-live="polite">
+  <span class="state" id="lineState">상태 확인 중</span>
+  <span class="facts" id="lineFacts"></span>
+  <span class="spacer"></span>
+  <span class="window" role="group" aria-label="표시 기간">
+    <button data-min="10">10분</button><button data-min="30" aria-pressed="true">30분</button>
+    <button data-min="60">1시간</button><button data-min="180">3시간</button>
+  </span>
+</header>
+
+<main>
+  <div id="msg" role="status"></div>
+  <p class="legend">
+    <i></i>실측 10초 평균 (AI 예측 대상)<i class="raw"></i>실측 개별값<i class="p50"></i>5분 전에 낸 예측 P50<i class="band"></i>예측 P10~P90<i class="lim"></i>기준표 한계
+    <span style="margin-left:14px">세로선 오른쪽 음영은 아직 오지 않은 5분입니다.</span>
+  </p>
+  <div class="grid" id="mainGrid"></div>
+  <div class="grid small" id="extraGrid"></div>
+  <div class="tables">
+    <section>
+      <h2>인터록 이력 (최근 15건)</h2>
+      <table><thead><tr><th>시각</th><th>요청 출처</th><th>요청</th><th>코드</th><th>값</th><th>4호기 명령</th><th>결과</th></tr></thead>
+      <tbody id="events"></tbody></table>
+    </section>
+    <section>
+      <h2>수신 품질 (표시 기간)</h2>
+      <table><thead><tr><th>설비</th><th>수신</th><th>누락</th><th>손상</th><th>재동기</th></tr></thead>
+      <tbody id="link"></tbody></table>
+    </section>
+    <section id="visionSec" style="display:none">
+      <h2>비전 검사</h2>
+      <p id="visionSum" style="margin:0 0 8px"></p>
+      <table><thead><tr><th>시각</th><th>부품</th><th>판정</th><th>신뢰도</th><th>허브 결과</th></tr></thead>
+      <tbody id="visionNg"></tbody></table>
+    </section>
+  </div>
+</main>
+
+<script src="/static/chart.js"></script>
+<script>
+"use strict";
+const css = getComputedStyle(document.documentElement);
+const COL = k => css.getPropertyValue(k).trim();
+const pad2 = n => String(n).padStart(2, "0");
+// 서버 시각은 KST 를 그대로 ms 로 담았으므로 UTC 게터로 읽으면 KST 표시가 됨
+const hhmm = ms => { const d = new Date(ms); return `${pad2(d.getUTCHours())}:${pad2(d.getUTCMinutes())}`; };
+const hhmmss = ms => { const d = new Date(ms); return `${hhmm(ms)}:${pad2(d.getUTCSeconds())}`; };
+const fmt = (v, unit) => {
+  if (v === null || v === undefined || Number.isNaN(v)) return "—";
+  const a = Math.abs(v);
+  const s = a >= 100 ? v.toFixed(1) : a >= 10 ? v.toFixed(2) : a >= 1 ? v.toFixed(3) : v.toFixed(4);
+  return unit && unit !== "RMS" ? `${s} ${unit}` : s;
+};
+const STATUS_KO = {
+  VALID: "유효", INSUFFICIENT_HISTORY: "이력 수집 중 (10분 필요)", DATA_GAP: "입력 데이터 공백",
+  DATA_STALE: "데이터 지연", NON_FINITE: "계산 오류", OUT_OF_PHYSICAL_RANGE: "물리 범위 밖", LOW_CONFIDENCE: "불확실성 큼",
+};
+const LINE_KO = { RUNNING: "라인 가동 중", STOPPING: "라인 정지 중", EJECTING: "불량 퇴출 중", STOPPED: "라인 정지", UNKNOWN: "4호기 상태 미확인" };
+
+let minutes = 30, timer = null;
+const charts = {};
+
+// ---------------------------------------------------------------- 차트 위 덧그림: 기준표 한계, 지금, 미래 5분
+const overlay = {
+  id: "overlay",
+  beforeDatasetsDraw(chart) {
+    const o = chart.options.plugins.overlay; if (!o) return;
+    const { ctx, chartArea: a, scales: { x, y } } = chart;
+    ctx.save();
+    const xn = x.getPixelForValue(o.now);
+    ctx.fillStyle = COL("--future");
+    ctx.fillRect(xn, a.top, a.right - xn, a.bottom - a.top);
+    const hline = (v, color, dash, text) => {
+      if (v === null || v === undefined) return;
+      const py = y.getPixelForValue(v); if (py < a.top || py > a.bottom) return;
+      ctx.strokeStyle = color; ctx.lineWidth = 1.5; ctx.setLineDash(dash);
+      ctx.beginPath(); ctx.moveTo(a.left, py); ctx.lineTo(a.right, py); ctx.stroke();
+      ctx.setLineDash([]); ctx.fillStyle = color; ctx.font = "12px 'IBM Plex Sans KR', sans-serif";
+      ctx.fillText(text, a.left + 4, py - 4);
+    };
+    hline(o.hi, COL("--alarm"), [], o.hiText);
+    hline(o.lo, COL("--alarm"), [], o.loText);
+    hline(o.warn, COL("--warn"), [6, 4], o.warnText);
+    (o.refs || []).forEach(r => hline(r.v, COL("--muted"), [6, 4], r.text));
+    ctx.strokeStyle = COL("--muted"); ctx.lineWidth = 1; ctx.setLineDash([3, 3]);
+    ctx.beginPath(); ctx.moveTo(xn, a.top); ctx.lineTo(xn, a.bottom); ctx.stroke();
+    ctx.setLineDash([]); ctx.fillStyle = COL("--muted"); ctx.font = "12px 'IBM Plex Sans KR', sans-serif";
+    const lw = ctx.measureText("지금").width;
+    ctx.fillText("지금", xn + 4 + lw > a.right ? xn - lw - 4 : xn + 4, a.top + 12);
+    ctx.restore();
+  },
+};
+
+function makeChart(canvas, isExtra) {
+  const ds = (label, color, extra) => Object.assign({ label, data: [], borderColor: color, backgroundColor: color,
+    pointRadius: 0, borderWidth: 1.5, tension: 0, spanGaps: false, parsing: false }, extra);
+  const datasets = isExtra
+    ? [ds("실측", COL("--ink"), { borderWidth: 1 })]
+    : [
+        ds("실측 개별값", "rgba(30,39,48,.28)", { borderWidth: 1 }),
+        ds("실측 10초 평균", COL("--ink"), { borderWidth: 2 }),
+        ds("P90", "transparent", { borderWidth: 0 }),
+        ds("P10", "transparent", { borderWidth: 0, fill: "-1", backgroundColor: COL("--band") }),
+        ds("예측 P50", COL("--pred"), { borderWidth: 2, borderDash: [6, 4] }),
+      ];
+  return new Chart(canvas, {
+    type: "line",
+    data: { datasets },
+    plugins: [overlay],
+    options: {
+      animation: false, responsive: true, maintainAspectRatio: false,
+      interaction: { mode: "nearest", axis: "x", intersect: false },
+      scales: {
+        x: { type: "linear", ticks: { callback: v => hhmm(v), maxTicksLimit: 8, color: COL("--muted") }, grid: { color: "#D7DADE" } },
+        y: { ticks: { color: COL("--muted") }, grid: { color: "#D7DADE" } },
+      },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          filter: i => i.dataset.label !== "P90" && i.dataset.label !== "P10",
+          callbacks: { title: items => items.length ? hhmmss(items[0].parsed.x) : "",
+                       label: i => `${i.dataset.label}: ${fmt(i.parsed.y)}` },
+        },
+        overlay: null,
+      },
+    },
+  });
+}
+
+// ---------------------------------------------------------------- 패널 생성/갱신
+function panelHTML(id, title, sub) {
+  return `<section class="chart-panel" id="p_${id}" aria-label="${title}">
+    <h2>${title}<small>${sub}</small></h2>
+    <div class="readout" id="r_${id}"></div>
+    <div class="canvas-box"><canvas id="c_${id}"></canvas></div>
+    <div class="foot" id="f_${id}"></div></section>`;
+}
+
+function limitText(t) {
+  const u = t.unit === "RMS" ? "" : ` ${t.unit}`;
+  return { hiText: t.hi !== null ? `${t.hi_inclusive ? "≥" : ">"} ${t.hi}${u} 불량` : "",
+           loText: t.lo !== null ? `< ${t.lo}${u} 불량` : "",
+           warnText: t.warn !== null && t.warn !== undefined ? `≥ ${t.warn} 위험 경고` : "" };
+}
+
+// AI 라인정지 판단과 동일: 예측 P50 ± kσ(개별 측정 산포) 가 기준표 한계를 넘는가
+function band(t, v) { const d = (t.k_sigma || 0) * (t.sigma_w || 0); return [v - d, v + d]; }
+function breach(t, v) {
+  if (v === null || v === undefined) return false;
+  const [dn, up] = band(t, v);
+  if (t.hi !== null && (t.hi_inclusive ? up >= t.hi : up > t.hi)) return true;
+  return t.lo !== null && dn < t.lo;
+}
+
+function margin(t, v) {
+  // AI 판단 범위(P50 ± kσ)에서 가장 가까운 한계까지의 여유 (양수 = 규격 안)
+  if (v === null || v === undefined) return null;
+  const [dn, up] = band(t, v), m = [];
+  if (t.hi !== null) m.push(t.hi - up);
+  if (t.lo !== null) m.push(dn - t.lo);
+  return m.length ? Math.min(...m) : null;
+}
+
+function updateTarget(t, now, horizon) {
+  const id = `${t.eq_id}_${t.target}`;
+  if (!charts[id]) {
+    document.getElementById("mainGrid").insertAdjacentHTML("beforeend", panelHTML(id, t.eq_label, t.label));
+    charts[id] = makeChart(document.getElementById(`c_${id}`), false);
+  }
+  const ch = charts[id];
+  const pts = arr => arr.map(p => ({ x: p[0], y: p[1] }));
+  ch.data.datasets[0].data = pts(t.actual);
+  ch.data.datasets[1].data = pts(t.mean10);
+  ch.data.datasets[2].data = t.pred.map(p => ({ x: p[0], y: p[3] }));
+  ch.data.datasets[3].data = t.pred.map(p => ({ x: p[0], y: p[1] }));
+  ch.data.datasets[4].data = t.pred.map(p => ({ x: p[0], y: p[2] }));
+  ch.options.scales.x.min = now - minutes * 60000;
+  ch.options.scales.x.max = now + horizon;
+  // 한계선이 항상 보이도록 y 범위에 포함
+  const ys = [...t.actual.map(p => p[1]), ...t.pred.flatMap(p => [p[1], p[3]])].filter(v => v !== null);
+  const lims = [t.lo, t.hi, t.warn].filter(v => v !== null && v !== undefined);
+  const lo = Math.min(...ys, ...lims), hi = Math.max(...ys, ...lims);
+  const padY = (hi - lo) * 0.08 || t.scale * 0.1;
+  ch.options.scales.y.min = t.target === "defect_band_energy" ? 0 : lo - padY;
+  ch.options.scales.y.max = hi + padY;
+  ch.options.plugins.overlay = Object.assign({ now, hi: t.hi, lo: t.lo, warn: t.warn }, limitText(t));
+  ch.update("none");
+
+  const L = t.latest, valid = L && L.status === "VALID";
+  const alarm = valid && breach(t, L.p50);
+  document.getElementById(`p_${id}`).classList.toggle("alarm", !!alarm);
+  const cur = L ? (L.current_mean ?? L.current) : (t.mean10.length ? t.mean10[t.mean10.length - 1][1] : null);
+  const mg = valid ? margin(t, L.p50) : null;
+  let html = `<span><span class="k">현재 (10초 평균)</span><span class="v">${fmt(cur, t.unit)}</span></span>`;
+  if (valid) {
+    html += `<span class="${alarm ? "alarm" : "pred"}"><span class="k">5분 뒤 예측 P50 (${L.target_ts.slice(11, 19)})</span>
+             <span class="v">${fmt(L.p50, t.unit)}</span></span>
+             <span><span class="k">P10 ~ P90</span>${fmt(L.p10)} ~ ${fmt(L.p90)}</span>
+             <span><span class="k">AI 정지 판단 범위 (P50 ± ${t.k_sigma}σ)</span>${fmt(band(t, L.p50)[0])} ~ ${fmt(band(t, L.p50)[1])}</span>
+             <span><span class="k">한계까지 여유</span>${mg === null ? "—" : (mg < 0 ? "한계 초과 " : "") + fmt(Math.abs(mg), t.unit)}</span>`;
+  } else {
+    html += `<span class="status bad">${L ? (STATUS_KO[L.status] || L.status) : "예측 없음 (AI 엔진 실행 확인)"}</span>`;
+  }
+  document.getElementById(`r_${id}`).innerHTML = html;
+
+  const m = t.metrics;
+  let foot = m.n
+    ? `<span>목표 시각이 지난 예측 <b>${m.n}</b>건 대조</span>
+       <span>평균 오차: AI <b>${fmt(m.mae_model)}</b>, 현재값 유지 시 ${fmt(m.mae_persist)}</span>
+       <span>P10~P90 안에 실측이 든 비율 <b>${Math.round(m.coverage * 100)}%</b></span>`
+    : `<span>아직 대조할 예측이 없습니다 (예측 후 5분이 지나야 함)</span>`;
+  if (m.valid_share !== null) foot += `<span>유효 예측 ${Math.round(m.valid_share * 100)}%</span>`;
+  if (t.truth) foot += `<span>시뮬레이션 정답: ${t.truth.scenario} 손상도 ${t.truth.damage.toFixed(2)}</span>`;
+  document.getElementById(`f_${id}`).innerHTML = foot;
+}
+
+function updateExtra(e, now, i) {
+  const id = `extra_${i}`;
+  if (!charts[id]) {
+    document.getElementById("extraGrid").insertAdjacentHTML("beforeend", panelHTML(id, e.label, e.note));
+    charts[id] = makeChart(document.getElementById(`c_${id}`), true);
+  }
+  const ch = charts[id];
+  ch.data.datasets[0].data = e.actual.map(p => ({ x: p[0], y: p[1] }));
+  ch.options.scales.x.min = now - minutes * 60000;
+  ch.options.scales.x.max = now;
+  const u = e.unit ? ` ${e.unit}` : "";
+  ch.options.plugins.overlay = e.ref_only
+    ? { now, hi: null, lo: null, warn: null, refs: [{ v: e.lo, text: `정상 참고 ${e.lo}` }, { v: e.hi, text: `정상 참고 ${e.hi}` }] }
+    : { now, hi: e.hi, hiText: `> ${e.hi}${u} 불량`, lo: null, warn: null };
+  const ys = e.actual.map(p => p[1]).filter(v => v !== null).concat([e.lo, e.hi].filter(v => v !== null));
+  if (ys.length) { const a = Math.min(...ys), b = Math.max(...ys), p = (b - a) * 0.1 || 1; ch.options.scales.y.min = a - p; ch.options.scales.y.max = b + p; }
+  ch.update("none");
+  const last = e.actual.length ? e.actual[e.actual.length - 1][1] : null;
+  document.getElementById(`r_${id}`).innerHTML = `<span><span class="k">현재</span><span class="v">${fmt(last, e.unit)}</span></span>`;
+  document.getElementById(`f_${id}`).innerHTML = "";
+}
+
+function updateLine(hub) {
+  const el = document.getElementById("line");
+  const st = hub ? hub.line_state : null;
+  el.classList.toggle("stopped", !!st && st !== "RUNNING" && st !== "UNKNOWN");
+  el.classList.toggle("warn", !hub || (st === "RUNNING" && hub.warn_lamp));
+  document.getElementById("lineState").textContent = hub ? (LINE_KO[st] || st) + (hub.warn_lamp && st === "RUNNING" ? ", 위험 경고" : "") : "인터록 허브 연결 안 됨";
+  document.getElementById("lineFacts").innerHTML = hub
+    ? `<span>경고등 <b>${hub.warn_lamp ? "켜짐" : "꺼짐"}</b></span><span>누적 퇴출 <b>${hub.eject_count ?? 0}</b>개</span><span id="upd"></span>`
+    : `<span>run_hub.sh 실행 여부를 확인하세요</span><span id="upd"></span>`;
+}
+
+function esc(s) { return String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c])); }
+
+function updateTables(d) {
+  const ev = d.events.map(e => `<tr class="${e.command && /ACKED/.test(e.result || "") ? "act" : ""}">
+      <td>${esc(e.ts.slice(5, 19))}</td><td>${esc(e.source)}</td><td>${esc(e.kind)}</td><td>${esc(e.code)}</td>
+      <td class="num">${e.value === null ? "" : fmt(e.value)}</td><td>${esc(e.command || "")}</td><td>${esc(e.result)}</td></tr>`).join("");
+  document.getElementById("events").innerHTML = ev || `<tr><td colspan="7" class="empty">기록된 인터록 동작이 없습니다</td></tr>`;
+  const lk = d.link.map(l => `<tr><td>${esc(l.eq_label)}</td><td class="num">${l.received.toLocaleString()}</td>
+      <td class="num" style="${l.lost ? "color:var(--alarm);font-weight:600" : ""}">${l.lost}</td>
+      <td class="num" style="${l.corrupt ? "color:var(--alarm);font-weight:600" : ""}">${l.corrupt}</td><td class="num">${l.resyncs}</td></tr>`).join("");
+  document.getElementById("link").innerHTML = lk || `<tr><td colspan="5" class="empty">통계 없음</td></tr>`;
+  const v = d.vision, vs = document.getElementById("visionSec");
+  vs.style.display = v ? "" : "none";
+  if (v) {
+    document.getElementById("visionSum").innerHTML = `표시 기간 검사 <b>${v.total}</b>개: 양품 ${v.ok}, `
+      + `<b style="${v.ng ? "color:var(--alarm)" : ""}">불량 ${v.ng}</b>`
+      + (v.avg_ms !== null ? `, 평균 추론 ${v.avg_ms} ms` : "");
+    document.getElementById("visionNg").innerHTML = v.recent_ng.map(n => `<tr class="${/ACKED/.test(n.hub || "") ? "act" : ""}">
+      <td>${esc(n.ts.slice(5, 19))}</td><td class="num">${n.part ?? ""}</td><td>${esc(n.status)}</td>
+      <td class="num">${n.conf === null ? "" : n.conf.toFixed(2)}</td><td>${esc(n.hub || "")}</td></tr>`).join("")
+      || `<tr><td colspan="5" class="empty">불량 기록 없음</td></tr>`;
+  }
+}
+
+function message(text) {
+  const m = document.getElementById("msg");
+  m.style.display = text ? "block" : "none"; m.textContent = text || "";
+}
+
+async function refresh() {
+  try {
+    const r = await fetch(`/api/data?minutes=${minutes}`, { cache: "no-store" });
+    const d = await r.json();
+    if (d.error) { message(`${d.error} (${d.db})`); return; }
+    if (d.empty) { message(`DB에 아직 데이터가 없습니다. 미들웨어가 실행 중인지 확인하세요. (${d.db})`); return; }
+    message("");
+    updateLine(d.hub);
+    d.targets.forEach(t => updateTarget(t, d.now, d.horizon_ms));
+    d.extras.forEach((e, i) => updateExtra(e, d.now, i));
+    updateTables(d);
+    const up = document.getElementById("upd");
+    if (up) up.textContent = `최신 데이터 ${hhmmss(d.now)}`;
+  } catch (err) {
+    message(`대시보드 서버에 연결할 수 없습니다. server.py 가 실행 중인지 확인하세요. (${err.message})`);
+  }
+}
+
+document.querySelectorAll(".window button").forEach(b => b.addEventListener("click", () => {
+  minutes = +b.dataset.min;
+  document.querySelectorAll(".window button").forEach(x => x.setAttribute("aria-pressed", x === b ? "true" : "false"));
+  refresh();
+}));
+
+if (typeof Chart === "undefined") {
+  message("차트 라이브러리를 불러오지 못했습니다. 인터넷이 없는 환경이면 chart.umd.min.js 를 dashboard/static/ 에 넣어주세요.");
+} else {
+  refresh();
+  timer = setInterval(refresh, 2000);
+}
+</script>
+</body>
+</html>

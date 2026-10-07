@@ -1,0 +1,5 @@
+[project]
+name = "sf-pdm-ai"
+version = "2.0.0"
+requires-python = ">=3.10"
+dependencies = ["torch>=2.1", "numpy>=1.24"]

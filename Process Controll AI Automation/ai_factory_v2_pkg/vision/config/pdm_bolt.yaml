@@ -1,0 +1,48 @@
+%YAML:1.0
+---
+# =====================================================================
+#  ai_factory 비전 검사 (볼트) - 실행 위치: ~/ai_factory/vision  (OpenCV FileStorage YAML 형식 - 첫 줄 %YAML:1.0 필수)
+#  경로는 실행 위치 기준 상대경로 또는 절대경로 (한글 경로는 피하세요)
+# =====================================================================
+
+# ---------- 추론 엔진 ----------
+task: "classify"
+topk: 5                      # 분류 모드: 상위 몇 개까지 표시/기록
+backend: "openvino"          # openvino | onnxruntime
+device: "AUTO_DGPU"          # AUTO_DGPU(외장 Arc 자동선택) | GPU.0 | GPU.1 | GPU | CPU
+model: "models/best.onnx"     # 품질팀 볼트 모델 (YOLO11n-cls, 5클래스)
+classes: "config/bolt_classes.txt"
+cache_dir: "yolo_engine/model_cache"   # GPU 컴파일 캐시
+conf_threshold: 0.80         # good 확률이 이 값 이상이어야 OK (높을수록 엄격, 현장 검증 후 조정)
+nms_threshold: 0.45          # 중복 박스 제거 IoU 임계값
+cpu_threads: 6               # ORT 를 CPU 로 돌릴 때 스레드 수
+
+# ---------- 입력 ----------
+source: "4"                  # RealSense D435 컬러 = /dev/video4
+                             # ※ WSL 은 USB 카메라가 기본 지원되지 않음 → README_WSL.md 참고
+camera_width: 640
+camera_height: 480
+camera_fps: 30
+camera_fourcc: "YUYV"
+
+# ---------- 판정 ----------
+roi: [0, 0, 0, 0]            # [x, y, w, h] 검사영역. 0,0,0,0 = 전체 화면
+defect_classes: [ "Black", "Green", "Red", "White" ]   # ※ 품질팀에 클래스 의미 확인 후 수정!
+ok_classes: [ "good" ]       # 적극 판정: good 으로 확신(>= conf_threshold)할 때만 OK, 나머지는 전부 NG
+min_box_area: 100            # 이 면적(px^2)보다 작은 박스 무시
+
+# ---------- 부품 감지 트리거 / PdM 연동 ----------
+part_trigger: "background"   # none=프레임마다 판정 | background=부품 도착 시 1번 판정 (PdM 연동 필수)
+trigger_bg_frames: 15        # 시작 시 배경 학습 프레임 수 → 이때 ROI 를 비워 두세요 (다시 학습: 'b' 키)
+trigger_diff_threshold: 25   # 픽셀 밝기 차이 기준 (조명이 흔들리면 올리기)
+trigger_presence_ratio: 0.03 # ROI 의 3% 이상 바뀌면 "부품 있음" (작은 부품이면 낮추기)
+trigger_settle_frames: 3     # 연속 3프레임 감지되면 검사 시작
+trigger_inspect_frames: 5    # 부품 1개당 5프레임 평균으로 판정
+trigger_clear_frames: 5      # 빈 상태 5프레임이면 다음 부품 대기
+event_output: 1              # 부품마다 '@@EVENT {json}' 출력 → vision_bridge.py 가 vision_link 로 전달
+
+# ---------- 출력 ----------
+output_dir: "../data/vision"       # ~/ai_factory/data/vision (CSV, NG 이미지)
+save_ng_images: 1            # 1=NG 이미지 저장
+ng_save_interval_ms: 1000    # 카메라: NG 이미지는 최소 1초 간격으로만 저장
+show_window: 1               # 화면 없이 운영하려면 0

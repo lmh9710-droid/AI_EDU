@@ -1,0 +1,14 @@
+{
+  "_설명": "클래스 → vision_link status 코드. 품질팀 클래스 의미와 vision README 기준표에 맞춰 수정하세요.",
+  "model_version": "yolo11n-cls-bolt-34d34b4c",
+  "ok_classes": [
+    "good"
+  ],
+  "status_map": {
+    "Black": "NG_VISION_BLACK",
+    "Green": "NG_VISION_GREEN",
+    "Red": "NG_VISION_RED",
+    "White": "NG_VISION_WHITE"
+  },
+  "uncertain_status": "NG_VISION_UNCERTAIN"
+}
