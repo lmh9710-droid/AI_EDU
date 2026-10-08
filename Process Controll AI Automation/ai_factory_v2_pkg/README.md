@@ -728,7 +728,8 @@ AI가 없었다면 RMS가 실제로 0.8에 도달한 순간 미들웨어가 `DEF
 
 | 위험 경고 (1호기 금형 균열 진행 중) | 라인 정지 (3호기 히터 열화 예측) |
 |---|---|
-| ![위험 경고 화면](docs/images/dashboard_warning.png) | ![라인 정지 화면](docs/images/dashboard_stop.png) |
+| ![위험 경고 화면](<img width="1889" height="885" alt="dashboard_stop" src="https://github.com/user-attachments/assets/3d861b69-3ce1-4943-a284-e33840f47888" />) | ![라인 정지 화면](<img width="1889" height="885" alt="dashboard_stop" src="https://github.com/user-attachments/assets/c34bddcc-e78c-4289-8181-e4cecc1eb225" />
+) |
 
 - 실선 = 실측 10초 평균, **파란 점선 = 5분 전에 낸 예측 P50**, 파란 띠 = P10~P90, 빨간 선 = 기준표 한계
 - 세로선 오른쪽 음영은 아직 오지 않은 5분 (미래 예측)
