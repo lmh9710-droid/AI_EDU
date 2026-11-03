@@ -836,7 +836,7 @@ cp scripts/env.sh.example scripts/env.sh      # 포트를 /dev/serial/by-id 경�
 - **라이선스 주의**: 비전 모델 학습에 사용한 Ultralytics는 **AGPL-3.0**입니다. 사내 사용은 일반적으로 문제가 적지만, 외부 배포·판매 시에는 법무 확인이 필요합니다.
 - **평가 데이터의 성격**: AI 평가는 가상 센서(실제 펌웨어 코드의 가상시간 실행)에 대한 결과입니다. 실설비 적용 전 `tb_model_health` 의 MAE와 적중률을 최소 수일간 확인한 뒤 라인 정지 권한을 운영에 반영하기를 권장합니다.
 - **AI 개발 보조**: 개발 과정에서 Claude (Anthropic) · Gemini (Google)를 보조 도구로 사용했습니다.
--[스마트팩토리 예지보전·안전 인터록 시스템 v2.pdf](https://github.com/user-attachments/files/34317360/v2.pdf)
+- [스마트팩토리 예지보전·안전 인터록 시스템 v2.pdf](https://github.com/user-attachments/files/34317360/v2.pdf)
 ---
 
 <p align="center">
