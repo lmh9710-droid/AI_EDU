@@ -129,3 +129,6 @@ END
 - [ ] 8단계: 알람 (타이머, 실린더 이상, 정체 감지)
 - [ ] 9단계: 타워 램프와 설비 꾸미기
 - [ ] 10단계: MC 프로토콜 통신 (GX Simulator2 / 실제 PLC 연동)
+
+-시운전:
+https://drive.google.com/drive/folders/1kEUlSuxZBdFdOE0UtyCbzy0uETyVeDGh
