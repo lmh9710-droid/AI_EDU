@@ -130,5 +130,5 @@ END
 - [ ] 9단계: 타워 램프와 설비 꾸미기
 - [ ] 10단계: MC 프로토콜 통신 (GX Simulator2 / 실제 PLC 연동)
 
--시운전:
+- 시운전 영상:
 https://drive.google.com/drive/folders/1kEUlSuxZBdFdOE0UtyCbzy0uETyVeDGh
