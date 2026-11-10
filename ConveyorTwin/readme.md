@@ -4,7 +4,7 @@ Unity로 만든 **컨베이어 라인 디지털트윈**과 **가상 시운전(Vi
 박스가 컨베이어를 타고 흐르다가 불량품(빨간 박스)이 감지되면 라인을 멈추고 푸셔로 밀어냅니다.
 설비와 제어 로직을 실제 PLC 구조(입력 X, 출력 Y, 데이터 레지스터 D)로 나눠서, 나중에 MELSEC PLC(GX Works2 / GX Simulator2)로 바꿔 끼울 수 있게 만들었습니다.
 
-![Unity 에디터 화면](docs/images/unity-editor.png)
+<img width="1919" height="1006" alt="스크린샷 2026-11-10 190738" src="https://github.com/user-attachments/assets/a2407e95-5c75-4ac7-92e9-1d58d81a3ed7" />
 
 *Unity 에디터 화면. 컨베이어 위에 출구 센서와 불량 판정 센서가 있고(초록 선이 감지 레이), 벨트 옆에 푸셔(파란색)가 있습니다.*
 
